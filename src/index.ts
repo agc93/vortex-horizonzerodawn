@@ -5,7 +5,7 @@ import { IDiscoveryResult, IExtensionContext, IGameStoreEntry, IMod } from 'vort
 import { getGamePath, isActiveGame, isGameManaged } from "vortex-ext-common";
 
 import { getInstaller, installContent, testSupportedContent } from "./install";
-import { isToolMod, UserPaths } from "./util";
+import { isSaveGame, isToolMod, UserPaths } from "./util";
 import { installedFilesRenderer } from "./attributes";
 import { GeneralSettings, settingsReducer } from "./settings";
 
@@ -17,7 +17,7 @@ export const MOD_FILE_EXT = ".bin";
 export type ModList = { [modId: string]: IMod; };
 
 export const getModPath = (gamePath: string): string => {
-    return path.join('Packed_DX12'); //TODO
+    return path.join('Packed_DX12');
 }
 
 export function findGame() {
@@ -51,11 +51,11 @@ function main(context: IExtensionContext) {
     context.registerGame({
         name: "Horizon Zero Dawn",
         mergeMods: true,
-        logo: 'gameart.png',
+        logo: 'gameart.jpg',
         supportedTools: [],
-        executable: () => 'HorizonZeroDawn.exe', //TODO
+        executable: () => 'HorizonZeroDawn.exe',
         requiredFiles: [
-            'ProjectWingman.exe' //TODO
+            'HorizonZeroDawn.exe'
         ],
         id: GAME_ID,
         queryPath: findGame,
@@ -99,7 +99,7 @@ function main(context: IExtensionContext) {
     //this adds a new mod type just so that tools go into the root directory instead
     context.registerModType(
         'hzd-tools',
-        10,
+        25,
         gameId => gameId === GAME_ID,
         (game) => getGamePath(game, context.api.getState(), true),
         (inst) => isToolMod(inst),
@@ -109,6 +109,19 @@ function main(context: IExtensionContext) {
             //this actually should be deployment essential, for everything except XGP
             //if we made it essential, XGP would completely fail
             //this way Steam/GOG *should* still work but XGP will be a non-fatal warning
+            deploymentEssential: false
+        }
+    );
+
+    context.registerModType(
+        'hzd-savegames',
+        100,
+        gameId => gameId === GAME_ID,
+        (game) => UserPaths.saveGamesPath(),
+        (inst) => isSaveGame(inst),
+        {
+            name: "HZD Save Game",
+            mergeMods: true,
             deploymentEssential: false
         }
     );

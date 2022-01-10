@@ -8,7 +8,7 @@ import { IInstallResult, ProgressDelegate } from "vortex-api/lib/types/api";
 import { IInstruction, InstructionType } from "vortex-api/lib/extensions/mod_management/types/IInstallResult";
 
 export function getInstaller(): AdvancedInstaller {
-    var builder = new AdvancedInstallerBuilder(GAME_ID);
+    var builder = new AdvancedInstallerBuilder(GAME_ID, MOD_FILE_EXT);
     var installer = builder
         .addExtender(addInstalledPaksAttribute(MOD_FILE_EXT))
         // .addExtender(getContainsPreset, Features.isSicarioEnabled)
@@ -67,4 +67,20 @@ export const installContent = async (files: string[], destinationPath: string, g
             });
             return Promise.resolve({ instructions });
     }
+};
+
+export const testSaveGameContent = (files: string[], gameId: string) => {
+    log('debug', `testing ${files.length} mod files for HZD save game`, {files, targetGame: GAME_ID});
+    let supported = (gameId === GAME_ID) &&
+        (
+            (
+                (files.find(file => path.basename(file).toLowerCase() === 'checkpoint.dat') !== undefined) &&
+                (files.find(file => path.basename(file).toLowerCase() === 'slotinfo.ini') !== undefined)
+            ) || false
+        );
+
+    return Promise.resolve({
+        supported,
+        requiredFiles: [],
+    });
 };
