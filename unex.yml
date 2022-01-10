@@ -1,0 +1,12 @@
+Game: site
+ModId: 335
+FileName: Horizon Zero Dawn Support for Vortex
+PreviousFile: auto
+FileDescription: |-
+  Requires Vortex ^ 1.4.0
+
+  Download and install using the Extensions pane in Vortex.
+
+  To manually install, extract the zip to %APPDATA%\Vortex\plugins\game-horizonzerodawn.
+
+  Read about the changes in this release at hzd.vortex.support/updates/v{{Version}}
