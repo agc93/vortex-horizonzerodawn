@@ -11,8 +11,9 @@ export const UserPaths = {
 
 export const isToolMod = async (instructions: IInstruction[]): Promise<boolean> => {
 	let exeSources = instructions.filter(f => f.type == "copy" && path.extname(f.source).toLowerCase() == '.exe');
+	let dllSources = instructions.filter(f => f.type == "copy" && path.extname(f.source).toLowerCase() == '.exe');
 	let pakSources = instructions.filter(f => f.type == "copy" && path.extname(f.source).toLowerCase() == MOD_FILE_EXT);
-	return exeSources.length > 0 && pakSources.length == 0;
+	return (exeSources.length > 0 || dllSources.length > 0) && pakSources.length == 0;
 }
 
 export const isSaveGame = async (instructions: IInstruction[]): Promise<boolean> => {
